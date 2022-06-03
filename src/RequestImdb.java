@@ -1,9 +1,11 @@
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,21 +27,32 @@ public class RequestImdb {
 		String[] moviesArray = parseJsonMovies(json);
 
 		List<String> titles = parseTitles(moviesArray);
-		titles.forEach(System.out::println);
-
 		List<String> urlImages = parseUrlImages(moviesArray);
-		urlImages.forEach(System.out::println);
+		List<String> rating	= parseRating(moviesArray);
+		List<String> date = parseDate(moviesArray);
+		
+		Movie movie;		
+		List<Movie> movies = new LinkedList<Movie>();
 
-		Movie movie = new Movie();
-		List<Movie> movies = new ArrayList<Movie>();
-
-		for (int i = 0; i < titles.size() && i < titles.size(); i++) {
+		for (int i = 0; i < titles.size();  i++) {
+			movie = new Movie();
+			
 			movie.setTitle(titles.get(i));
-			movie.setImage(urlImages.get(i));
+			movie.setImage(urlImages.get(i));			
+			movie.setRating(Double.parseDouble(rating.get(i)));
+			movie.setYear(date.get(i));
 			movies.add(movie);
+			
 		}
 
-		System.out.println(movie);
+		PrintWriter writer = new PrintWriter("content.html");
+
+		new HtmlGenerator(writer).generate(movies, writer); //movies é um List<Movie>
+
+		writer.close();
+		
+		
+			
 
 	}
 
@@ -64,6 +77,12 @@ public class RequestImdb {
 
 	private static List<String> parseUrlImages(String[] moviesArray) {
 		return parseAttribute(moviesArray, 5);
+	}
+	private static List<String> parseRating(String[] moviesArray) {
+		return parseAttribute(moviesArray, 7);
+	}
+	private static List<String> parseDate(String[] moviesArray) {
+		return parseAttribute(moviesArray, 4);
 	}
 
 	private static List<String> parseAttribute(String[] moviesArray, int pos) {
