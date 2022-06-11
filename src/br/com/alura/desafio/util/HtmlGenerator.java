@@ -45,8 +45,8 @@ public class HtmlGenerator {
 
 	private static String criaDivTaplate(Movie movie, String divTemplate) {
 
-		return String.format(divTemplate, movie.getTitle(), movie.getImage(), movie.getTitle(), movie.getRating(),
-				movie.getYear());
+		return String.format(divTemplate, movie.title(), movie.urlImage(), movie.title(), movie.rating(),
+				movie.year());
 
 	}
 

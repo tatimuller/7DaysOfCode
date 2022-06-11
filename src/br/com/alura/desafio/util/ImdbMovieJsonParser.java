@@ -6,9 +6,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import br.com.alura.desafio.model.JsonParser;
 import br.com.alura.desafio.model.Movie;
 
-public class ImdbMovieJsonParser {
+public class ImdbMovieJsonParser implements JsonParser{
 
 	private List<String> titles;
 	private List<String> urlImages;
@@ -20,7 +21,6 @@ public class ImdbMovieJsonParser {
 
 	public ImdbMovieJsonParser(String json) {
 		this.moviesArray = parseJsonMovies(json);
-
 		this.titles = parseTitles(moviesArray);
 		this.urlImages = parseUrlImages(moviesArray);
 		this.rating = parseRating(moviesArray);
@@ -35,7 +35,7 @@ public class ImdbMovieJsonParser {
 
 			this.movie.setTitle(titles.get(i));
 			this.movie.setImage(urlImages.get(i));
-			this.movie.setRating(Double.parseDouble(rating.get(i)));
+			this.movie.setRating((rating.get(i)));
 			this.movie.setYear(date.get(i));
 			this.movies.add(movie);
 
