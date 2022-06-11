@@ -1,4 +1,5 @@
-import java.util.Date;
+package br.com.alura.desafio.model;
+
 
 public class Movie {
 

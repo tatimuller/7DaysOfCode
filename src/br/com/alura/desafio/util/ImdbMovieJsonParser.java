@@ -1,59 +1,47 @@
-import java.io.PrintWriter;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
+package br.com.alura.desafio.util;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class RequestImdb {
+import br.com.alura.desafio.model.Movie;
 
-	public static void main(String[] args) throws Exception {
+public class ImdbMovieJsonParser {
 
-		HttpClient httpClient = HttpClient.newHttpClient();
+	private List<String> titles;
+	private List<String> urlImages;
+	private List<String> rating;
+	private List<String> date;
+	private String[] moviesArray;
+	private Movie movie;
+	List<Movie> movies = new ArrayList<Movie>();
 
-		HttpRequest httpRequest = HttpRequest.newBuilder(new URI("https://imdb-api.com/en/API/Top250Movies/k_rtnl3hgg"))
-				.GET().build();
+	public ImdbMovieJsonParser(String json) {
+		this.moviesArray = parseJsonMovies(json);
 
-		HttpResponse<String> resp = httpClient.send(httpRequest, BodyHandlers.ofString());
-		String json = resp.body();
+		this.titles = parseTitles(moviesArray);
+		this.urlImages = parseUrlImages(moviesArray);
+		this.rating = parseRating(moviesArray);
+		this.date = parseDate(moviesArray);
 
-		String[] moviesArray = parseJsonMovies(json);
+	}
 
-		List<String> titles = parseTitles(moviesArray);
-		List<String> urlImages = parseUrlImages(moviesArray);
-		List<String> rating	= parseRating(moviesArray);
-		List<String> date = parseDate(moviesArray);
-		
-		Movie movie;		
-		List<Movie> movies = new LinkedList<Movie>();
+	public List<Movie> parse() {
 
-		for (int i = 0; i < titles.size();  i++) {
-			movie = new Movie();
-			
-			movie.setTitle(titles.get(i));
-			movie.setImage(urlImages.get(i));			
-			movie.setRating(Double.parseDouble(rating.get(i)));
-			movie.setYear(date.get(i));
-			movies.add(movie);
-			
+		for (int i = 0; i < titles.size(); i++) {
+			this.movie = new Movie();
+
+			this.movie.setTitle(titles.get(i));
+			this.movie.setImage(urlImages.get(i));
+			this.movie.setRating(Double.parseDouble(rating.get(i)));
+			this.movie.setYear(date.get(i));
+			this.movies.add(movie);
+
 		}
 
-		PrintWriter writer = new PrintWriter("content.html");
-
-		new HtmlGenerator(writer).generate(movies, writer); //movies é um List<Movie>
-
-		writer.close();
-		
-		
-			
-
+		return movies;
 	}
 
 	private static String[] parseJsonMovies(String json) {
@@ -78,9 +66,11 @@ public class RequestImdb {
 	private static List<String> parseUrlImages(String[] moviesArray) {
 		return parseAttribute(moviesArray, 5);
 	}
+
 	private static List<String> parseRating(String[] moviesArray) {
 		return parseAttribute(moviesArray, 7);
 	}
+
 	private static List<String> parseDate(String[] moviesArray) {
 		return parseAttribute(moviesArray, 4);
 	}
@@ -89,5 +79,4 @@ public class RequestImdb {
 		return Stream.of(moviesArray).map(e -> e.split("\",\"")[pos]).map(e -> e.split(":\"")[1])
 				.map(e -> e.replaceAll("\"", "")).collect(Collectors.toList());
 	}
-
 }
