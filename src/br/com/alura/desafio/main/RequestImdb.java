@@ -11,7 +11,7 @@ public class RequestImdb {
 
 	public static void main(String[] args) throws Exception {
 
-		String apiKey = "k_rtnl3hgg";
+		String apiKey = "";//informe sua chave de consulta na apiImdb
 		
 		ImdbApiClient iac = new ImdbApiClient();
 		String json = iac.conectImdbApiClient(apiKey);
