@@ -19,8 +19,8 @@ Para construção desse projeto utilizei as seguintes tecnologias:
 
 Como resultado, obtive uma página Html que mostra a lista do top 250 filmes do IMDB, exibindo cada filme em um Card que contém o Titulo, a imagem, a nota no Imdb e o Ano do filme.
 
-
-
-
+<p align="center">
+<img src="https://user-images.githubusercontent.com/101002556/174441751-1bc39816-dda9-4b19-8ad2-b5bbcfc8a33c.gif"/>
+</p>
 
 
